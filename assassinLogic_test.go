@@ -8,6 +8,20 @@ import (
 	"testing"
 )
 
+/*
+############################################################
+
+              LL / String Conversion
+
+############################################################
+*/
+
+/*
+##############################
+Function Tests
+##############################
+*/
+
 func TestStringToLL(t *testing.T) {
 	t.Run("Passing an empty string and checking for error", func(t *testing.T) {
 		_, got := StringToLL("")
@@ -99,6 +113,20 @@ func TestLLToString(t *testing.T) {
 		}
 	})
 }
+
+/*
+############################################################
+
+                      Helper Functions
+
+############################################################
+*/
+
+/*
+##############################
+Linked Lists
+##############################
+*/
 
 func compareLists(got, want *list.List, t *testing.T) error {
 	eGot := got.Front()

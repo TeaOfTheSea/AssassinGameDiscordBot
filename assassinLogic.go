@@ -7,6 +7,14 @@ import (
 	"strings"
 )
 
+/*
+############################################################
+
+              LL / String Conversion
+
+############################################################
+*/
+
 // This function returns a linked list if fed a string
 // in the format "A -> B -> C"
 func StringToLL(s string) (*list.List, error) {
