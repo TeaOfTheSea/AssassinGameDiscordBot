@@ -2,16 +2,16 @@ package assassinlogic
 
 import (
 	"testing"
+  "errors"
+  "fmt"
 )
 
 func TestStringToLL(t *testing.T) {
-	//want := list.New()
-	//for e := want.Front(); e != nil; e = e.Next() {
-	//	t.Error(e.Value)
-	//}
-	_, err := StringToLL("")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+  t.Run("Passing an empty string and checking for error", func(t* testing.T){
+	  _, got := StringToLL("")
+    want := errors.New("No input given.")
+    if fmt.Sprint(got) != fmt.Sprint(want) {
+      t.Errorf("got %q want %q", got, want)
+    }
+  })
 }
