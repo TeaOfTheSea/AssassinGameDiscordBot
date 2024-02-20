@@ -3,6 +3,7 @@ package assassinlogic
 import (
 	"container/list"
 	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -24,9 +25,16 @@ func StringToLL(s string) (*list.List, error) {
 // This function returns a string in the format
 // "A -> B -> C" if fed a linked list
 func LLToString(l *list.List) (string, error) {
-	e := l.Front()
-	if e == nil {
+	firstElement := l.Front()
+	if firstElement == nil {
 		return "", errors.New("Input list is empty")
 	}
-	return "", errors.New("Function unimplemented")
+	output := ""
+	for e := l.Front(); e != nil; e = e.Next() {
+		output += fmt.Sprint(e.Value)
+		if e.Next() != nil {
+			output += " -> "
+		}
+	}
+	return output, nil
 }

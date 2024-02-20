@@ -4,19 +4,9 @@ import (
 	"container/list"
 	"errors"
 	"fmt"
+	"strings"
 	"testing"
 )
-
-func TestLLToString(t *testing.T) {
-	t.Run("Passing an empty list and checking for error", func(t *testing.T) {
-		input := list.New()
-		_, got := LLToString(input)
-		want := errors.New("Input list is empty")
-		if fmt.Sprint(got) != fmt.Sprint(want) {
-			t.Errorf("got %q want %q", got, want)
-		}
-	})
-}
 
 func TestStringToLL(t *testing.T) {
 	t.Run("Passing an empty string and checking for error", func(t *testing.T) {
@@ -50,6 +40,29 @@ func TestStringToLL(t *testing.T) {
 		err = compareLists(got, want, t)
 		if err != nil {
 			t.Error(err)
+		}
+	})
+}
+
+func TestLLToString(t *testing.T) {
+	t.Run("Passing an empty list and checking for error", func(t *testing.T) {
+		input := list.New()
+		_, got := LLToString(input)
+		want := errors.New("Input list is empty")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
+			t.Errorf("got %q want %q", got, want)
+		}
+	})
+	t.Run("Passing a list of one element", func(t *testing.T) {
+		input := list.New()
+		input.PushFront("Colin")
+		got, err := LLToString(input)
+		if err != nil {
+			t.Error(err)
+		}
+		want := "Colin"
+		if strings.Compare(got, want) != 0 {
+			t.Errorf("got %q want %q", got, want)
 		}
 	})
 }
