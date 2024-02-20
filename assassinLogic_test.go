@@ -25,6 +25,16 @@ func TestStringToLL(t *testing.T) {
 		want.PushFront("Colin")
 		compareLists(got, want, t)
 	})
+	t.Run("Passing two users", func(t *testing.T) {
+		got, err := StringToLL("Colin -> Tan10o")
+		if err != nil {
+			t.Errorf(fmt.Sprint(err))
+		}
+		want := list.New()
+		want.PushFront("Colin")
+		want.PushFront("Tan10o")
+		compareLists(got, want, t)
+	})
 }
 
 func compareLists(got, want *list.List, t *testing.T) {
