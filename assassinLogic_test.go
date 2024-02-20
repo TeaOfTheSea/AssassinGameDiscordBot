@@ -23,16 +23,20 @@ func TestStringToLL(t *testing.T) {
 		}
 		want := list.New()
 		want.PushFront("Colin")
-		eGot := got.Front()
-		for eWant := want.Front(); eWant != nil; eWant = eWant.Next() {
-			if eGot == nil {
-				t.Errorf("list got storter than list want")
-				break
-			}
-			if eGot.Value != eWant.Value {
-				t.Errorf("In linked list, got %q want %q", eGot.Value, eWant.Value)
-			}
-			eGot = eGot.Next()
-		}
+		compareLists(got, want, t)
 	})
+}
+
+func compareLists(got, want *list.List, t *testing.T) {
+	eGot := got.Front()
+	for eWant := want.Front(); eWant != nil; eWant = eWant.Next() {
+		if eGot == nil {
+			t.Errorf("list got storter than list want")
+			break
+		}
+		if eGot.Value != eWant.Value {
+			t.Errorf("In linked list, got %q want %q", eGot.Value, eWant.Value)
+		}
+		eGot = eGot.Next()
+	}
 }
