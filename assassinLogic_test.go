@@ -42,6 +42,26 @@ func TestStringToLL(t *testing.T) {
 			t.Error(err)
 		}
 	})
+	t.Run("Converting from string to list and back", func(t *testing.T) {
+		wants := [3]string{
+			"Colin",
+			"Colin -> Tan10o",
+			"Colin -> Tan10o -> Dr. Bob",
+		}
+		for _, want := range wants {
+			list, err := StringToLL(want)
+			if err != nil {
+				t.Error(err)
+			}
+			got, err := LLToString(list)
+			if err != nil {
+				t.Error(err)
+			}
+			if got != want {
+				t.Errorf("got %q want %q", got, want)
+			}
+		}
+	})
 }
 
 func TestLLToString(t *testing.T) {
