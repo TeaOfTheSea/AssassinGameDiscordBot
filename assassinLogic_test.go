@@ -7,6 +7,17 @@ import (
 	"testing"
 )
 
+func TestLLToString(t *testing.T) {
+	t.Run("Passing an empty list and checking for error", func(t *testing.T) {
+		input := list.New()
+		_, got := LLToString(input)
+		want := errors.New("Input list is empty")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
+			t.Errorf("got %q want %q", got, want)
+		}
+	})
+}
+
 func TestStringToLL(t *testing.T) {
 	t.Run("Passing an empty string and checking for error", func(t *testing.T) {
 		_, got := StringToLL("")

@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+// This function returns a linked list if fed a string
+// in the format "A -> B -> C"
 func StringToLL(s string) (*list.List, error) {
 	// Return empty list and error if input string is empty
 	if s == "" {
@@ -17,4 +19,14 @@ func StringToLL(s string) (*list.List, error) {
 		output.PushFront(v)
 	}
 	return output, nil
+}
+
+// This function returns a string in the format
+// "A -> B -> C" if fed a linked list
+func LLToString(l *list.List) (string, error) {
+	e := l.Front()
+	if e == nil {
+		return "", errors.New("Input list is empty")
+	}
+	return "", errors.New("Function unimplemented")
 }
