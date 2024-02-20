@@ -21,7 +21,7 @@ func TestLLToString(t *testing.T) {
 func TestStringToLL(t *testing.T) {
 	t.Run("Passing an empty string and checking for error", func(t *testing.T) {
 		_, got := StringToLL("")
-		want := errors.New("No input given.")
+		want := errors.New("Input string is empty")
 		if fmt.Sprint(got) != fmt.Sprint(want) {
 			t.Errorf("got %q want %q", got, want)
 		}
@@ -34,7 +34,10 @@ func TestStringToLL(t *testing.T) {
 		}
 		want := list.New()
 		want.PushFront("Colin")
-		compareLists(got, want, t)
+		err = compareLists(got, want, t)
+		if err != nil {
+			t.Error(err)
+		}
 	})
 	t.Run("Passing two users", func(t *testing.T) {
 		got, err := StringToLL("Colin -> Tan10o")
@@ -44,11 +47,14 @@ func TestStringToLL(t *testing.T) {
 		want := list.New()
 		want.PushFront("Colin")
 		want.PushFront("Tan10o")
-		compareLists(got, want, t)
+		err = compareLists(got, want, t)
+		if err != nil {
+			t.Error(err)
+		}
 	})
 }
 
-func compareLists(got, want *list.List, t *testing.T) {
+func compareLists(got, want *list.List, t *testing.T) error {
 	eGot := got.Front()
 	for eWant := want.Front(); eWant != nil; eWant = eWant.Next() {
 		if eGot == nil {
@@ -56,8 +62,9 @@ func compareLists(got, want *list.List, t *testing.T) {
 			break
 		}
 		if eGot.Value != eWant.Value {
-			t.Errorf("In linked list, got %q want %q", eGot.Value, eWant.Value)
+			return errors.New(fmt.Sprintf("In linked list, got %q want %q", eGot.Value, eWant.Value))
 		}
 		eGot = eGot.Next()
 	}
+	return nil
 }

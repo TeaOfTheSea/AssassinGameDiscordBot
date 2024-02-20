@@ -11,7 +11,7 @@ import (
 func StringToLL(s string) (*list.List, error) {
 	// Return empty list and error if input string is empty
 	if s == "" {
-		return list.New(), errors.New("No input given.")
+		return list.New(), errors.New("Input string is empty")
 	}
 	var sValues []string = strings.Split(s, " -> ")
 	output := list.New()
