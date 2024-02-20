@@ -17,7 +17,7 @@ func StringToLL(s string) (*list.List, error) {
 	var sValues []string = strings.Split(s, " -> ")
 	output := list.New()
 	for _, v := range sValues {
-		output.PushFront(v)
+		output.PushBack(v)
 	}
 	return output, nil
 }

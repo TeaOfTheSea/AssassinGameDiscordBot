@@ -23,7 +23,7 @@ func TestStringToLL(t *testing.T) {
 			t.Errorf(fmt.Sprint(err))
 		}
 		want := list.New()
-		want.PushFront("Colin")
+		want.PushBack("Colin")
 		err = compareLists(got, want, t)
 		if err != nil {
 			t.Error(err)
@@ -35,8 +35,8 @@ func TestStringToLL(t *testing.T) {
 			t.Errorf(fmt.Sprint(err))
 		}
 		want := list.New()
-		want.PushFront("Colin")
-		want.PushFront("Tan10o")
+		want.PushBack("Colin")
+		want.PushBack("Tan10o")
 		err = compareLists(got, want, t)
 		if err != nil {
 			t.Error(err)
@@ -55,12 +55,25 @@ func TestLLToString(t *testing.T) {
 	})
 	t.Run("Passing a list of one element", func(t *testing.T) {
 		input := list.New()
-		input.PushFront("Colin")
+		input.PushBack("Colin")
 		got, err := LLToString(input)
 		if err != nil {
 			t.Error(err)
 		}
 		want := "Colin"
+		if strings.Compare(got, want) != 0 {
+			t.Errorf("got %q want %q", got, want)
+		}
+	})
+	t.Run("Passing a lits of one element", func(t *testing.T) {
+		input := list.New()
+		input.PushBack("Colin")
+		input.PushBack("Tan10o")
+		got, err := LLToString(input)
+		if err != nil {
+			t.Error(err)
+		}
+		want := "Colin -> Tan10o"
 		if strings.Compare(got, want) != 0 {
 			t.Errorf("got %q want %q", got, want)
 		}
