@@ -16,12 +16,6 @@ import (
 ############################################################
 */
 
-/*
-##############################
-Function Tests
-##############################
-*/
-
 func TestStringToLL(t *testing.T) {
 	t.Run("Passing an empty string and checking for error", func(t *testing.T) {
 		_, got := StringToLL("")
@@ -38,7 +32,7 @@ func TestStringToLL(t *testing.T) {
 		}
 		want := list.New()
 		want.PushBack("Colin")
-		err = compareLists(got, want, t)
+		err = compareLists(got, want)
 		if err != nil {
 			t.Error(err)
 		}
@@ -51,7 +45,7 @@ func TestStringToLL(t *testing.T) {
 		want := list.New()
 		want.PushBack("Colin")
 		want.PushBack("Tan10o")
-		err = compareLists(got, want, t)
+		err = compareLists(got, want)
 		if err != nil {
 			t.Error(err)
 		}
@@ -117,6 +111,83 @@ func TestLLToString(t *testing.T) {
 /*
 ############################################################
 
+                    Linked List Operations
+
+############################################################
+*/
+
+func TestBuildLL(t *testing.T) {
+	t.Run("Passing empty string slice", func(t *testing.T) {
+		_, got := BuildLL([]string{})
+		want := errors.New("Input slice is empty")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
+			t.Errorf("got %q want %q", got, want)
+		}
+	})
+	t.Run("Passing in one name", func(t *testing.T) {
+		got, err := BuildLL([]string{"Walter"})
+		if err != nil {
+			t.Error(err)
+		}
+		want := list.New()
+		want.PushBack("Walter")
+		err = compareLists(got, want)
+		if err != nil {
+			t.Error(err)
+		}
+	})
+	t.Run("Passing in two names", func(t *testing.T) {
+		got, err := BuildLL([]string{"Walter", "Colin"})
+		if err != nil {
+			t.Error(err)
+		}
+		want1 := list.New()
+		want1.PushBack("Walter")
+		want1.PushBack("Colin")
+		want2 := list.New()
+		want2.PushBack("Colin")
+		want2.PushBack("Walter")
+		// The function being tested here returns in a random
+		// order, so we're happy as long as one of the errors
+		// turns up nil
+		if compareLists(got, want1) != nil && compareLists(got, want2) != nil {
+			t.Errorf("Got an output which mached neither want permutation.")
+		}
+	})
+	t.Run("Checking output list as a string using LLToString", func(t *testing.T) {
+		list, err := BuildLL([]string{"Walter", "Colin", "Tan10o"})
+		if err != nil {
+			t.Error(err)
+		}
+		got, err := LLToString(list)
+		if err != nil {
+			t.Error(err)
+		}
+		wants := []string{"Walter -> Colin -> Tan10o",
+			"Walter -> Tan10o -> Colin",
+			"Colin -> Walter -> Tan10o",
+			"Colin -> Tan10o -> Walter",
+			"Tan10o -> Walter -> Colin",
+			"Tan10o -> Colin -> Walter"}
+		// BuildLL generates a list in a random order, which
+		// is kept when LLToString is called. This means our
+		// functions were successful as long as we find a match
+		// in one of the above strings.
+		found := 0
+		for _, want := range wants {
+			if got == want {
+				found++
+			}
+		}
+		if found != 1 {
+			t.Errorf("%d wants found got %q", found, got)
+		}
+	})
+}
+
+/*
+############################################################
+
                       Helper Functions
 
 ############################################################
@@ -128,12 +199,11 @@ Linked Lists
 ##############################
 */
 
-func compareLists(got, want *list.List, t *testing.T) error {
+func compareLists(got, want *list.List) error {
 	eGot := got.Front()
 	for eWant := want.Front(); eWant != nil; eWant = eWant.Next() {
 		if eGot == nil {
-			t.Errorf("list got storter than list want")
-			break
+			return errors.New("List got shorter than list want")
 		}
 		if eGot.Value != eWant.Value {
 			return errors.New(fmt.Sprintf("In linked list, got %q want %q", eGot.Value, eWant.Value))

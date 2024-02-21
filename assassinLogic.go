@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"errors"
 	"fmt"
+	"math/rand"
 	"strings"
 )
 
@@ -43,6 +44,28 @@ func LLToString(l *list.List) (string, error) {
 		if e.Next() != nil {
 			output += " -> "
 		}
+	}
+	return output, nil
+}
+
+/*
+############################################################
+
+                    Linked List Operations
+
+############################################################
+*/
+
+func BuildLL(s []string) (*list.List, error) {
+	if len(s) == 0 {
+		return list.New(), errors.New("Input slice is empty")
+	}
+	rand.Shuffle(len(s), func(i, j int) {
+		s[i], s[j] = s[j], s[i]
+	})
+	output := list.New()
+	for _, v := range s {
+		output.PushBack(v)
 	}
 	return output, nil
 }
