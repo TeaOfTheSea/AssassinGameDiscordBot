@@ -134,49 +134,49 @@ func BuildLL(s []string) ([]*list.List, error) {
 			// perform the hat draw.
 
 			targetIndex := rand.Intn(len(papers))
-      // If the last person remaining draws themself, we
-      // can't fix the situation without restarting, so this
-      // if does just that.
+			// If the last person remaining draws themself, we
+			// can't fix the situation without restarting, so this
+			// if does just that.
 			if len(papers) == 1 && papers[targetIndex] == person {
 				break
 			}
-      // If, however, there are multiple left, we can just
-      // redraw until we've gotten a different person.
-      for papers[targetIndex] == person {
-        targetIndex = rand.Intn(len(papers))
-      }
-      target := papers[targetIndex]
-      // Once we have a target, we need to see if they are
-      // already in a chain to avoid duplicating users
-      // across chains.
-      targetExistsInChain := 0
-      var targetsChain int
-      for chain := range chains {
-        for e := chains[chain].Front(); e != nil; e = e.Next() {
-          if target == e.Value {
-            targetExistsInChain += 1
-            targetsChain = chain
-          }
-        }
-      }
-      if targetExistsInChain == 0 {
-        // If the target was not found in an existing chain,
-        // we can add them to the person's chain with no
-        // hassle.
-        personsChain.InsertAfter(target, personsNode)
-      } else if targetExistsInChain == 1 {
-        // If the target was found in an existing chain,
-        // we need to merge the two chains together, unless
-        // the target is already in the same chain as the
-        // person.
-        if personsChain.Front().Value != target {
-          personsChain.PushBackList(chains[targetsChain])
-          chains = slices.Delete(chains, targetsChain, targetsChain+1)
-        }
-      } else {
-        return nil, errors.New("Somehow, someone was found in more than one chain. BAD")
-      }
-      papers = slices.Delete(papers, targetIndex, targetIndex+1)
+			// If, however, there are multiple left, we can just
+			// redraw until we've gotten a different person.
+			for papers[targetIndex] == person {
+				targetIndex = rand.Intn(len(papers))
+			}
+			target := papers[targetIndex]
+			// Once we have a target, we need to see if they are
+			// already in a chain to avoid duplicating users
+			// across chains.
+			targetExistsInChain := 0
+			var targetsChain int
+			for chain := range chains {
+				for e := chains[chain].Front(); e != nil; e = e.Next() {
+					if target == e.Value {
+						targetExistsInChain += 1
+						targetsChain = chain
+					}
+				}
+			}
+			if targetExistsInChain == 0 {
+				// If the target was not found in an existing chain,
+				// we can add them to the person's chain with no
+				// hassle.
+				personsChain.InsertAfter(target, personsNode)
+			} else if targetExistsInChain == 1 {
+				// If the target was found in an existing chain,
+				// we need to merge the two chains together, unless
+				// the target is already in the same chain as the
+				// person.
+				if personsChain.Front().Value != target {
+					personsChain.PushBackList(chains[targetsChain])
+					chains = slices.Delete(chains, targetsChain, targetsChain+1)
+				}
+			} else {
+				return nil, errors.New("Somehow, someone was found in more than one chain. BAD")
+			}
+			papers = slices.Delete(papers, targetIndex, targetIndex+1)
 		}
 		if len(papers) == 0 {
 			solutionFound = true
