@@ -183,108 +183,14 @@ func TestBuildLL(t *testing.T) {
 			t.Error(err)
 		}
 
-		// if len(lists) == 1 {
-		// 	got, err := LLToString(lists[0])
-		// 	if err != nil {
-		// 		t.Error(err)
-		// 	}
-		// 	wants := []string{"Walter -> Colin -> Tan10o -> Waldo",
-		// 		"Walter -> Colin -> Waldo -> Tan10o",
-		// 		"Walter -> Tan10o -> Colin -> Waldo",
-		// 		"Walter -> Tan10o -> Waldo -> Colin",
-		// 		"Walter -> Waldo -> Colin -> Tan10o",
-		// 		"Walter -> Waldo -> Tan10o -> Colin",
-		// 		"Colin -> Walter -> Tan10o -> Waldo",
-		// 		"Colin -> Walter -> Waldo -> Tan10o",
-		// 		"Colin -> Tan10o -> Walter -> Waldo",
-		// 		"Colin -> Tan10o -> Waldo -> Walter",
-		// 		"Colin -> Waldo -> Walter -> Tan10o",
-		// 		"Colin -> Waldo -> Tan10o -> Walter",
-		// 		"Tan10o -> Walter -> Colin -> Waldo",
-		// 		"Tan10o -> Walter -> Waldo -> Colin",
-		// 		"Tan10o -> Colin -> Walter -> Waldo",
-		// 		"Tan10o -> Colin -> Waldo -> Walter",
-		// 		"Tan10o -> Waldo -> Walter -> Colin",
-		// 		"Tan10o -> Waldo -> Colin -> Walter",
-		// 		"Waldo -> Walter -> Colin -> Tan10o",
-		// 		"Waldo -> Walter -> Tan10o -> Colin",
-		// 		"Waldo -> Colin -> Walter -> Tan10o",
-		// 		"Waldo -> Colin -> Tan10o -> Walter",
-		// 		"Waldo -> Tan10o -> Walter -> Colin",
-		// 		"Waldo -> Tan10o -> Colin -> Walter"}
-		// 	// BuildLL generates a list in a random order, which
-		// 	// is kept when LLToString is called. This means our
-		// 	// functions were successful as long as we find a match
-		// 	// in one of the above strings.
-		// 	found := 0
-		// 	for _, want := range wants {
-		// 		if got == want {
-		// 			found++
-		// 		}
-		// 	}
-		// 	if found != 1 {
-		// 		errorString := ""
-		// 		for i := range lists {
-		// 			for e := lists[i].Front(); e != nil; e = e.Next() {
-		// 				errorString += fmt.Sprint(e.Value)
-		// 				if e.Next() != nil {
-		// 					errorString += " -> "
-		// 				}
-		// 			}
-		// 			if i+1 < len(lists) {
-		// 				errorString += "\n"
-		// 			}
-		// 		}
-		// 		t.Errorf("%d found got %q chains:\n%q", found, got, errorString)
-		// 	}
-		// } else {
-		// 	var gots [2]string
-		// 	gots[0], err = LLToString(lists[0])
-		// 	if err != nil {
-		// 		t.Error(err)
-		// 	}
-		// 	gots[1], err = LLToString(lists[1])
-		// 	if err != nil {
-		// 		t.Error(err)
-		// 	}
-		// 	wants := [][]string{{"Walter -> Colin", "Tan10o -> Waldo"},
-		// 		{"Walter -> Colin", "Waldo -> Tan10o"},
-		// 		{"Walter -> Tan10o", "Colin -> Waldo"},
-		// 		{"Walter -> Tan10o", "Waldo -> Colin"},
-		// 		{"Walter -> Waldo", "Colin -> Tan10o"},
-		// 		{"Walter -> Waldo", "Tan10o -> Colin"},
-		// 		{"Colin -> Walter", "Tan10o -> Waldo"},
-		// 		{"Colin -> Walter", "Waldo -> Tan10o"},
-		// 		{"Colin -> Tan10o", "Walter -> Waldo"},
-		// 		{"Colin -> Tan10o", "Waldo -> Walter"},
-		// 		{"Colin -> Waldo", "Walter -> Tan10o"},
-		// 		{"Colin -> Waldo", "Tan10o -> Walter"},
-		// 		{"Tan10o -> Walter", "Colin -> Waldo"},
-		// 		{"Tan10o -> Walter", "Waldo -> Colin"},
-		// 		{"Tan10o -> Colin", "Walter -> Waldo"},
-		// 		{"Tan10o -> Colin", "Waldo -> Walter"},
-		// 		{"Tan10o -> Waldo", "Walter -> Colin"},
-		// 		{"Tan10o -> Waldo", "Colin -> Walter"},
-		// 		{"Waldo -> Walter", "Colin -> Tan10o"},
-		// 		{"Waldo -> Walter", "Tan10o -> Colin"},
-		// 		{"Waldo -> Colin", "Walter -> Tan10o"},
-		// 		{"Waldo -> Colin", "Tan10o -> Walter"},
-		// 		{"Waldo -> Tan10o", "Walter -> Colin"},
-		// 		{"Waldo -> Tan10o", "Colin -> Walter"},
-		// 	}
-		// 	found := 0
-		// 	for _, v := range wants {
-		// 		matches := 0
-		// 		for i := range v {
-		// 			if v[i] == gots[i] {
-		// 				matches += 1
-		// 			}
-		// 		}
-		// 		if matches == 2 {
-		// 			found += 1
-		// 		}
-		// 	}
-		// }
+		got := make([]string, len(lists))
+		for i := range got {
+			got[i], err = LLToString(lists[i])
+			if err != nil {
+				t.Errorf(fmt.Sprint(err))
+			}
+		}
+
 		wants := [][]string{{"Walter -> Colin -> Tan10o -> Waldo"},
 			{"Walter -> Colin -> Waldo -> Tan10o"},
 			{"Walter -> Tan10o -> Colin -> Waldo"},
@@ -334,14 +240,6 @@ func TestBuildLL(t *testing.T) {
 			{"Waldo -> Tan10o", "Walter -> Colin"},
 			{"Waldo -> Tan10o", "Colin -> Walter"}}
 
-		got := make([]string, len(lists))
-		for i := range got {
-			got[i], err = LLToString(lists[i])
-			if err != nil {
-				t.Errorf(fmt.Sprint(err))
-			}
-		}
-
 		found := false
 		for _, want := range wants {
 			if slices.Equal(want, got) {
@@ -350,6 +248,16 @@ func TestBuildLL(t *testing.T) {
 		}
 		if found == false {
 			t.Errorf("Got %v", got)
+		}
+	})
+}
+
+func TestFindElement(t *testing.T) {
+	t.Run("Input empty list", func(t *testing.T) {
+		_, got := FindElement(list.New(), "SearchTerm")
+		want := errors.New("Input linked list empty")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
+			t.Errorf("got %v want %v", got, want)
 		}
 	})
 }

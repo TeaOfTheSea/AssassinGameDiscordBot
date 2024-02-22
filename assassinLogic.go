@@ -184,3 +184,12 @@ func BuildLL(s []string) ([]*list.List, error) {
 	}
 	return chains, nil
 }
+
+func FindElement(chain *list.List, s string) (*list.Element, error) {
+	e := chain.Front()
+	f := (*list.Element)(nil)
+	if e == f {
+		return nil, errors.New("Input linked list empty")
+	}
+	return nil, errors.New("Function not yet implemented")
+}
