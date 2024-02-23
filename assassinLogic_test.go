@@ -265,7 +265,7 @@ func TestFindElementInChain(t *testing.T) {
 		testList.PushBack("A string that won't return a match")
 		testList.PushBack("A second string that won't return a match")
 		_, got := FindElementInChain(testList, "SearchTerm")
-		want := errors.New("Desired string was not an element in this array")
+		want := errors.New("Desired string was not an element in this list")
 		if fmt.Sprint(got) != fmt.Sprint(want) {
 			t.Errorf("got %v want %v", got, want)
 		}
@@ -298,6 +298,25 @@ func TestFindElementInChains(t *testing.T) {
 		emptySlice := make([]*list.List, 0)
 		_, _, got := FindElementInChains(emptySlice, "TargetString")
 		want := errors.New("Slice recieved is empty")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
+			t.Errorf("Got %v want %v", got, want)
+		}
+	})
+	t.Run("Passing a slice containing an empty list", func(t *testing.T) {
+		inputSlice := []*list.List{list.New()}
+		_, _, got := FindElementInChains(inputSlice, "TargetString")
+		want := errors.New("Input linked list empty")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
+			t.Errorf("Got %v want %v", got, want)
+		}
+	})
+	t.Run("Passing a slice which does not contain the target string", func(t *testing.T) {
+		inputList := list.New()
+		inputList.PushBack("Gibberish1")
+		inputList.PushBack("Gibberish2")
+		inputSlice := []*list.List{inputList}
+		_, _, got := FindElementInChains(inputSlice, "TargetString")
+		want := errors.New("Desired string was not an element in any given list")
 		if fmt.Sprint(got) != fmt.Sprint(want) {
 			t.Errorf("Got %v want %v", got, want)
 		}

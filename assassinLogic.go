@@ -183,7 +183,7 @@ func FindElementInChain(chain *list.List, s string) (*list.Element, error) {
 			return e, nil
 		}
 	}
-	return nil, errors.New("Desired string was not an element in this array")
+	return nil, errors.New("Desired string was not an element in this list")
 }
 
 // If given a slice of linked lists from container/list,
@@ -196,5 +196,13 @@ func FindElementInChains(chains []*list.List, s string) (*list.List, *list.Eleme
 	if len(chains) == 0 {
 		return nil, nil, errors.New("Slice recieved is empty")
 	}
-	return nil, nil, errors.New("Function not yet implemented")
+	for _, chain := range chains {
+		element, err := FindElementInChain(chain, s)
+		if err != nil && fmt.Sprint(err) != "Desired string was not an element in this list" {
+			return nil, nil, err
+		} else if err == nil {
+			return chain, element, nil
+		}
+	}
+	return nil, nil, errors.New("Desired string was not an element in any given list")
 }
