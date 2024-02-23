@@ -175,14 +175,20 @@ func PlayerKilled(chains []*list.List, player string) (personsList *list.List, h
 	if err != nil {
 		return nil, "", "", err
 	}
-	hunter = ""
-	target = ""
+	// In the case that the person that died was at the front
+	// of the list, their hunter would be at the back of the
+	// list, so we assign the person as the back to the hunter
+	// and then overwrite it if needed.
+	hunter = personsList.Back().Value.(string)
 	if personsElement.Prev() != nil {
 		hunter = personsElement.Prev().Value.(string)
 	}
+	// Same applies in reverse with the target.
+	target = personsList.Front().Value.(string)
 	if personsElement.Next() != nil {
 		target = personsElement.Next().Value.(string)
 	}
+	personsList.Remove(personsElement)
 	return personsList, hunter, target, nil
 }
 

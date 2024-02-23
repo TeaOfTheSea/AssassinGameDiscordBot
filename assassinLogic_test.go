@@ -292,15 +292,40 @@ func TestPlayerKilled(t *testing.T) {
 		}
 	})
 	t.Run("Checking trivial single list combinations", func(t *testing.T) {
-		testStrings := []string{"Walter -> Bob -> Tan10o", "Bob -> Tan10o", "Walter -> Bob", "Bob"}
-		expectations := [][]string{{"Walter", "Tan10o"}, {"", "Tan10o"}, {"Walter", ""}, {"", ""}}
+		testStrings := []string{"Walter -> Bob -> Tan10o", "Bob -> Tan10o", "Walter -> Bob"}
+		expectations := [][]string{{"Walter", "Tan10o"}, {"Tan10o", "Tan10o"}, {"Walter", "Walter"}}
 		for i := range testStrings {
 			wantList, err := StringToLL(testStrings[i])
 			if err != nil {
 				t.Error(err)
 			}
-			wantSlice := []*list.List{wantList}
-			gotList, gotHunter, gotTarget, err := PlayerKilled(wantSlice, "Bob")
+			testSlice := []*list.List{wantList}
+			gotList, gotHunter, gotTarget, err := PlayerKilled(testSlice, "Bob")
+			if err != nil {
+				t.Error(err)
+			}
+			if gotHunter != expectations[i][0] {
+				t.Errorf("Hunter: got %v, want %v", gotHunter, expectations[i][0])
+			}
+			if gotTarget != expectations[i][1] {
+				t.Errorf("Hunter: got %v, want %v", gotTarget, expectations[i][1])
+			}
+			if wantList != gotList {
+				t.Errorf("List: got %v, got %v", gotList, wantList)
+			}
+		}
+	})
+	t.Run("Testing non-trivial single-list combinations", func(t *testing.T) {
+		testStrings := []string{"Walter -> Bob -> Tan10o", "Walter -> Bob -> Tan10o", "Walter -> Tan10o", "Walter -> Tan10o"}
+		namesToRemove := []string{"Walter", "Tan10o", "Walter", "Tan10o"}
+		expectations := [][]string{{"Tan10o", "Bob"}, {"Bob", "Walter"}, {"Tan10o", "Tan10o"}, {"Walter", "Walter"}}
+		for i := range testStrings {
+			wantList, err := StringToLL(testStrings[i])
+			if err != nil {
+				t.Error(err)
+			}
+			testSlice := []*list.List{wantList}
+			gotList, gotHunter, gotTarget, err := PlayerKilled(testSlice, namesToRemove[i])
 			if err != nil {
 				t.Error(err)
 			}
