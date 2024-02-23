@@ -67,19 +67,6 @@ func BuildLL(s []string) ([]*list.List, error) {
 		return []*list.List{chain}, errors.New("Input slice has only one element")
 	}
 
-	// This segment builds a single linked list, but this func
-	// has been altered to return multiple to more closely
-	// resemble the way the game is played irl.
-
-	// rand.Shuffle(len(s), func(i, j int) {
-	// 	s[i], s[j] = s[j], s[i]
-	// })
-	// output := list.New()
-	// for _, v := range s {
-	// 	output.PushBack(v)
-	// }
-	// return output, nil
-
 	// When playing assassin in real life, the way my friends
 	// and I have played, we each write our names on some
 	// sort of paper and then drop it into a pot. We would
@@ -185,11 +172,16 @@ func BuildLL(s []string) ([]*list.List, error) {
 	return chains, nil
 }
 
+// If given a linked list from container/list, this function
+// will return the first element e which has a value s.
 func FindElement(chain *list.List, s string) (*list.Element, error) {
-	e := chain.Front()
-	f := (*list.Element)(nil)
-	if e == f {
+	if chain.Front() == (*list.Element)(nil) {
 		return nil, errors.New("Input linked list empty")
 	}
-	return nil, errors.New("Function not yet implemented")
+  for e := chain.Front(); e != nil; e = e.Next() {
+    if e.Value == s {
+      return e, nil
+    }
+  }
+	return nil, errors.New("Desired string was not an element in this array")
 }
