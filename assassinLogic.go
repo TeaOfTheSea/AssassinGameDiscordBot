@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"errors"
 	"fmt"
+	"log"
 	"math/rand"
 	"slices"
 	"strings"
@@ -100,20 +101,15 @@ func BuildLL(s []string) ([]*list.List, error) {
 			// to make sure that when our person draws their
 			// target, we place the targer into the existing
 			// linked list "chain."
-			var personsNode *list.Element = nil
-			var personsChain *list.List = nil
-			for _, chain := range chains {
-				for e := chain.Front(); e != nil; e = e.Next() {
-					if person == e.Value {
-						personsNode = e
-						personsChain = chain
-					}
-				}
-			}
-			if personsNode == nil {
+
+			personsChain, personsNode, err := FindElementInChains(chains, person)
+			if fmt.Sprint(err) == "Desired string was not an element in any given list" ||
+				fmt.Sprint(err) == "Slice recieved is empty" {
 				personsChain = list.New()
 				chains = append(chains, personsChain)
 				personsNode = personsChain.PushBack(person)
+			} else if err != nil {
+				log.Fatal(err)
 			}
 
 			// Now that we have eather created a new chain or
@@ -136,32 +132,34 @@ func BuildLL(s []string) ([]*list.List, error) {
 			// Once we have a target, we need to see if they are
 			// already in a chain to avoid duplicating users
 			// across chains.
-			targetExistsInChain := 0
-			var targetsChain int
-			for chain := range chains {
-				for e := chains[chain].Front(); e != nil; e = e.Next() {
-					if target == e.Value {
-						targetExistsInChain += 1
-						targetsChain = chain
-					}
-				}
-			}
-			if targetExistsInChain == 0 {
+
+			// targetExistsInChain := 0
+			// var targetsChain int
+			// for chain := range chains {
+			// 	for e := chains[chain].Front(); e != nil; e = e.Next() {
+			// 		if target == e.Value {
+			// 			targetExistsInChain += 1
+			// 			targetsChain = chain
+			// 		}
+			// 	}
+			// }
+
+			targetsChain, _, err := FindElementInChains(chains, target)
+			if fmt.Sprint(err) == "Desired string was not an element in any given list" {
 				// If the target was not found in an existing chain,
 				// we can add them to the person's chain with no
 				// hassle.
 				personsChain.InsertAfter(target, personsNode)
-			} else if targetExistsInChain == 1 {
+			} else {
 				// If the target was found in an existing chain,
 				// we need to merge the two chains together, unless
 				// the target is already in the same chain as the
 				// person.
+				targetsChainIndex := slices.Index(chains, targetsChain)
 				if personsChain.Front().Value != target {
-					personsChain.PushBackList(chains[targetsChain])
-					chains = slices.Delete(chains, targetsChain, targetsChain+1)
+					personsChain.PushBackList(targetsChain)
+					chains = slices.Delete(chains, targetsChainIndex, targetsChainIndex+1)
 				}
-			} else {
-				return nil, errors.New("Somehow, someone was found in more than one chain. BAD")
 			}
 			papers = slices.Delete(papers, targetIndex, targetIndex+1)
 		}
