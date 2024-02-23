@@ -193,5 +193,8 @@ func FindElementInChains(chains []*list.List, s string) (*list.List, *list.Eleme
 	if chains == nil {
 		return nil, nil, errors.New("Slice recieved is nil")
 	}
+	if len(chains) == 0 {
+		return nil, nil, errors.New("Slice recieved is empty")
+	}
 	return nil, nil, errors.New("Function not yet implemented")
 }

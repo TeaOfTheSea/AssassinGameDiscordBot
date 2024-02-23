@@ -294,6 +294,14 @@ func TestFindElementInChains(t *testing.T) {
 			t.Errorf("Got %v want %v", got, want)
 		}
 	})
+	t.Run("Passing an empty slice", func(t *testing.T) {
+		emptySlice := make([]*list.List, 0)
+		_, _, got := FindElementInChains(emptySlice, "TargetString")
+		want := errors.New("Slice recieved is empty")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
+			t.Errorf("Got %v want %v", got, want)
+		}
+	})
 }
 
 /*
