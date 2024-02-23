@@ -321,6 +321,25 @@ func TestFindElementInChains(t *testing.T) {
 			t.Errorf("Got %v want %v", got, want)
 		}
 	})
+	t.Run("Passing a slice that does contain the target string", func(t *testing.T) {
+		worthlessList := list.New()
+		worthlessList.PushBack("Gibberish1")
+		worthlessList.PushBack("Gibberish2")
+		wantList := list.New()
+		wantList.PushBack("Gibberish3")
+		wantElement := wantList.PushBack("TargetString")
+		inputSlice := []*list.List{worthlessList, wantList}
+		gotList, gotElement, err := FindElementInChains(inputSlice, "TargetString")
+		if err != nil {
+			t.Error(err)
+		}
+		if gotList != wantList {
+			t.Errorf("got %v, want %v", gotList, wantList)
+		}
+		if gotElement != wantElement {
+			t.Errorf("got %v, want %v", gotElement, wantElement)
+		}
+	})
 }
 
 /*
