@@ -112,7 +112,7 @@ func TestLLToString(t *testing.T) {
 /*
 ############################################################
 
-                    Linked List Operations
+                    	 Game Operations
 
 ############################################################
 */
@@ -251,6 +251,79 @@ func TestBuildLL(t *testing.T) {
 		}
 	})
 }
+
+func TestPlayerKilled(t *testing.T) {
+	t.Run("Chains slice is nil", func(t *testing.T) {
+		var nilSlice []*list.List
+		_, _, _, got := PlayerKilled(nilSlice, "DeadPlayer")
+		want := errors.New("Input slice is nil")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
+			t.Errorf("Got %v want %v", got, want)
+		}
+	})
+	t.Run("Chains slice is empty", func(t *testing.T) {
+		emptySlice := make([]*list.List, 0)
+		_, _, _, got := PlayerKilled(emptySlice, "DeadPlayer")
+		want := errors.New("Input slice is empty")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
+			t.Errorf("Got %v want %v", got, want)
+		}
+	})
+	t.Run("Passing a slice containing an empty list", func(t *testing.T) {
+		inputSlice := []*list.List{list.New()}
+		_, _, _, got := PlayerKilled(inputSlice, "DeadPlayer")
+		want := errors.New("Input linked list empty")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
+			t.Errorf("Got %v, want %v", got, want)
+		}
+	})
+	t.Run("Passing a slice which does not contain the dead player", func(t *testing.T) {
+		list1 := list.New()
+		list1.PushBack("Gibberish1")
+		list1.PushBack("Gibberish2")
+		list2 := list.New()
+		list2.PushBack("Gibberish3")
+		list2.PushBack("Gibberish4")
+		inputSlice := []*list.List{list1, list2}
+		_, _, _, got := PlayerKilled(inputSlice, "DeadPlayer")
+		want := errors.New("Desired string was not an element in any given list")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
+			t.Errorf("Got %v, want %v", got, want)
+		}
+	})
+	t.Run("Checking trivial single list combinations", func(t *testing.T) {
+		testStrings := []string{"Walter -> Bob -> Tan10o", "Bob -> Tan10o", "Walter -> Bob", "Bob"}
+		expectations := [][]string{{"Walter", "Tan10o"}, {"", "Tan10o"}, {"Walter", ""}, {"", ""}}
+		for i := range testStrings {
+			wantList, err := StringToLL(testStrings[i])
+			if err != nil {
+				t.Error(err)
+			}
+			wantSlice := []*list.List{wantList}
+			gotList, gotHunter, gotTarget, err := PlayerKilled(wantSlice, "Bob")
+			if err != nil {
+				t.Error(err)
+			}
+			if gotHunter != expectations[i][0] {
+				t.Errorf("Hunter: got %v, want %v", gotHunter, expectations[i][0])
+			}
+			if gotTarget != expectations[i][1] {
+				t.Errorf("Hunter: got %v, want %v", gotTarget, expectations[i][1])
+			}
+			if wantList != gotList {
+				t.Errorf("List: got %v, got %v", gotList, wantList)
+			}
+		}
+	})
+}
+
+/*
+############################################################
+
+                    Linked List Operations
+
+############################################################
+*/
 
 func TestFindElementInChain(t *testing.T) {
 	t.Run("Input empty list", func(t *testing.T) {

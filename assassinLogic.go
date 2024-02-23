@@ -4,7 +4,6 @@ import (
 	"container/list"
 	"errors"
 	"fmt"
-	"log"
 	"math/rand"
 	"slices"
 	"strings"
@@ -53,7 +52,7 @@ func LLToString(l *list.List) (string, error) {
 /*
 ############################################################
 
-                    Linked List Operations
+                    	 Game Operations
 
 ############################################################
 */
@@ -109,7 +108,7 @@ func BuildLL(s []string) ([]*list.List, error) {
 				chains = append(chains, personsChain)
 				personsNode = personsChain.PushBack(person)
 			} else if err != nil {
-				log.Fatal(err)
+				return nil, err
 			}
 
 			// Now that we have eather created a new chain or
@@ -133,24 +132,13 @@ func BuildLL(s []string) ([]*list.List, error) {
 			// already in a chain to avoid duplicating users
 			// across chains.
 
-			// targetExistsInChain := 0
-			// var targetsChain int
-			// for chain := range chains {
-			// 	for e := chains[chain].Front(); e != nil; e = e.Next() {
-			// 		if target == e.Value {
-			// 			targetExistsInChain += 1
-			// 			targetsChain = chain
-			// 		}
-			// 	}
-			// }
-
 			targetsChain, _, err := FindElementInChains(chains, target)
 			if fmt.Sprint(err) == "Desired string was not an element in any given list" {
 				// If the target was not found in an existing chain,
 				// we can add them to the person's chain with no
 				// hassle.
 				personsChain.InsertAfter(target, personsNode)
-			} else {
+			} else if err == nil {
 				// If the target was found in an existing chain,
 				// we need to merge the two chains together, unless
 				// the target is already in the same chain as the
@@ -160,6 +148,8 @@ func BuildLL(s []string) ([]*list.List, error) {
 					personsChain.PushBackList(targetsChain)
 					chains = slices.Delete(chains, targetsChainIndex, targetsChainIndex+1)
 				}
+			} else {
+				return nil, err
 			}
 			papers = slices.Delete(papers, targetIndex, targetIndex+1)
 		}
@@ -169,6 +159,40 @@ func BuildLL(s []string) ([]*list.List, error) {
 	}
 	return chains, nil
 }
+
+// Passed a slice of all of the current chains, this
+// function will remove the player from the slice they are
+// in and return the slice, the hunter of our player, and
+// the target of our player. hunter -> player -> target
+func PlayerKilled(chains []*list.List, player string) (personsList *list.List, hunter string, target string, err error) {
+	if chains == nil {
+		return nil, "", "", errors.New("Input slice is nil")
+	}
+	if len(chains) == 0 {
+		return nil, "", "", errors.New("Input slice is empty")
+	}
+	personsList, personsElement, err := FindElementInChains(chains, player)
+	if err != nil {
+		return nil, "", "", err
+	}
+	hunter = ""
+	target = ""
+	if personsElement.Prev() != nil {
+		hunter = personsElement.Prev().Value.(string)
+	}
+	if personsElement.Next() != nil {
+		target = personsElement.Next().Value.(string)
+	}
+	return personsList, hunter, target, nil
+}
+
+/*
+############################################################
+
+                    Linked List Operations
+
+############################################################
+*/
 
 // If given a linked list from container/list, this function
 // will return the first element e which has a value s.
