@@ -252,9 +252,9 @@ func TestBuildLL(t *testing.T) {
 	})
 }
 
-func TestFindElement(t *testing.T) {
+func TestFindElementInChain(t *testing.T) {
 	t.Run("Input empty list", func(t *testing.T) {
-		_, got := FindElement(list.New(), "SearchTerm")
+		_, got := FindElementInChain(list.New(), "SearchTerm")
 		want := errors.New("Input linked list empty")
 		if fmt.Sprint(got) != fmt.Sprint(want) {
 			t.Errorf("got %v want %v", got, want)
@@ -264,7 +264,7 @@ func TestFindElement(t *testing.T) {
 		testList := list.New()
 		testList.PushBack("A string that won't return a match")
 		testList.PushBack("A second string that won't return a match")
-		_, got := FindElement(testList, "SearchTerm")
+		_, got := FindElementInChain(testList, "SearchTerm")
 		want := errors.New("Desired string was not an element in this array")
 		if fmt.Sprint(got) != fmt.Sprint(want) {
 			t.Errorf("got %v want %v", got, want)
@@ -275,11 +275,22 @@ func TestFindElement(t *testing.T) {
 		testList.PushBack("Gibberish Element")
 		testList.PushBack("Second Gibberish Element")
 		want := testList.PushBack("Target")
-		got, err := FindElement(testList, "Target")
+		got, err := FindElementInChain(testList, "Target")
 		if err != nil {
 			t.Error(err)
 		}
 		if got != want {
+			t.Errorf("Got %v want %v", got, want)
+		}
+	})
+}
+
+func TestFindElementInChains(t *testing.T) {
+	t.Run("Passing a nil slice", func(t *testing.T) {
+		var nilSlice []*list.List
+		_, _, got := FindElementInChains(nilSlice, "TargetString")
+		want := errors.New("Slice recieved is nil")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
 			t.Errorf("Got %v want %v", got, want)
 		}
 	})

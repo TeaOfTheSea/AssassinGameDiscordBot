@@ -174,7 +174,7 @@ func BuildLL(s []string) ([]*list.List, error) {
 
 // If given a linked list from container/list, this function
 // will return the first element e which has a value s.
-func FindElement(chain *list.List, s string) (*list.Element, error) {
+func FindElementInChain(chain *list.List, s string) (*list.Element, error) {
 	if chain.Front() == (*list.Element)(nil) {
 		return nil, errors.New("Input linked list empty")
 	}
@@ -184,4 +184,14 @@ func FindElement(chain *list.List, s string) (*list.Element, error) {
 		}
 	}
 	return nil, errors.New("Desired string was not an element in this array")
+}
+
+// If given a slice of linked lists from container/list,
+// this function will return the first list and element of
+// that list which contains the value s.
+func FindElementInChains(chains []*list.List, s string) (*list.List, *list.Element, error) {
+	if chains == nil {
+		return nil, nil, errors.New("Slice recieved is nil")
+	}
+	return nil, nil, errors.New("Function not yet implemented")
 }
