@@ -260,16 +260,29 @@ func TestFindElement(t *testing.T) {
 			t.Errorf("got %v want %v", got, want)
 		}
 	})
-  t.Run("Input list without desired object", func(t *testing.T) {
-    testList := list.New()
-    testList.PushBack("A string that won't return a match")
-    testList.PushBack("A second string that won't return a match")
-    _, got := FindElement(testList, "SearchTerm")
-    want := errors.New("Desired string was not an element in this array")
-    if fmt.Sprint(got) != fmt.Sprint(want) {
-      t.Errorf("got %v want %v", got, want)
-    } 
-  })
+	t.Run("Input list without desired object", func(t *testing.T) {
+		testList := list.New()
+		testList.PushBack("A string that won't return a match")
+		testList.PushBack("A second string that won't return a match")
+		_, got := FindElement(testList, "SearchTerm")
+		want := errors.New("Desired string was not an element in this array")
+		if fmt.Sprint(got) != fmt.Sprint(want) {
+			t.Errorf("got %v want %v", got, want)
+		}
+	})
+	t.Run("Desired object is in list", func(t *testing.T) {
+		testList := list.New()
+		testList.PushBack("Gibberish Element")
+		testList.PushBack("Second Gibberish Element")
+		want := testList.PushBack("Target")
+		got, err := FindElement(testList, "Target")
+		if err != nil {
+			t.Error(err)
+		}
+		if got != want {
+			t.Errorf("Got %v want %v", got, want)
+		}
+	})
 }
 
 /*

@@ -178,10 +178,10 @@ func FindElement(chain *list.List, s string) (*list.Element, error) {
 	if chain.Front() == (*list.Element)(nil) {
 		return nil, errors.New("Input linked list empty")
 	}
-  for e := chain.Front(); e != nil; e = e.Next() {
-    if e.Value == s {
-      return e, nil
-    }
-  }
+	for e := chain.Front(); e != nil; e = e.Next() {
+		if e.Value == s {
+			return e, nil
+		}
+	}
 	return nil, errors.New("Desired string was not an element in this array")
 }
